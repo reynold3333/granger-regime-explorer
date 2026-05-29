@@ -56,6 +56,7 @@ from analysis.periods import (
     remove_period,
     save_periods,
 )
+from analysis.interpret import full_interpretation
 
 
 st.set_page_config(
@@ -436,10 +437,24 @@ with state_cols[3]:
 # ============================================================
 # TABS
 # ============================================================
-tab_overview, tab_timeline, tab_networks, tab_2d, tab_heatmaps, tab_compare = st.tabs(
-    ["📋 Overview", "📅 Timeline", "🕸 Networks", "📍 2D (PCA · t-SNE)",
-     "🔥 Heatmaps", "🆚 Compare"]
+(tab_explain, tab_overview, tab_timeline, tab_networks, tab_2d,
+ tab_heatmaps, tab_compare) = st.tabs(
+    ["💬 Explain (plain English)", "📋 Overview", "📅 Timeline", "🕸 Networks",
+     "📍 2D (PCA · t-SNE)", "🔥 Heatmaps", "🆚 Compare"]
 )
+
+
+# ---------- Explain (plain English) ----------
+with tab_explain:
+    st.subheader("What do these results mean?")
+    if results is None:
+        st.info(
+            "Click **▶ Run Analysis** in the sidebar. This tab will then explain "
+            "your results in plain English — no statistics jargon."
+        )
+    else:
+        report = full_interpretation(results, st.session_state.periods)
+        st.markdown(report)
 
 
 # ---------- Overview ----------
